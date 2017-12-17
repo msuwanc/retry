@@ -13,4 +13,16 @@ class Retry {
 
     result
   }
+
+  def retry2[T](fn: => Either[Exception, T], interval: Int, retryTime: Int): Either[Exception, T] = {
+    println(Console.GREEN + retryTime + Console.RESET)
+
+    Thread.sleep(interval * 1000)
+
+    if(retryTime > 0 && fn.isLeft) {
+      retry2(fn, interval, retryTime-1)
+    } else {
+      fn
+    }
+  }
 }
